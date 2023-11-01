@@ -1,0 +1,49 @@
+* The datatype name must be written in Camel casing or else it would work.
+    Eg.
+        isInTheaters: Boolean
+* If a data can not be null then (!) must be present in the end of the data type. 
+    Eg.
+        name: String!
+
+Queries:
+
+# User Queries
+
+query GetAllUsers {
+  users {
+    id
+    name
+    age
+    nationality
+    friends {
+      name
+      age
+    }
+  }
+}
+
+query GetUser($userId: ID!){
+  user(id: $userId) {
+    name
+    age
+    nationality
+  }
+}
+
+# Movie Queries
+
+query GetAllMovies {
+  movies {
+    name
+    yearOfPublication
+    isInTheaters
+  }
+}
+
+query GetMovie($name: String!){
+  movie(name: $name) {
+    name
+    yearOfPublication
+    isInTheaters
+  }
+}

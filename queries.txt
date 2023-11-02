@@ -5,6 +5,16 @@
     Eg.
         name: String!
 
+input keyword
+- It is beter to use input for the mutation of data as it allows us to provide a default value rather than a null for a property/scalar. 
+  Eg.
+    input CreateUserInput {
+    name: String!
+    username: String!
+    age: Int = 18
+    nationality: Nationality!
+  }
+
 Queries:
 
 # User Queries
@@ -45,5 +55,45 @@ query GetMovie($name: String!){
     name
     yearOfPublication
     isInTheaters
+  }
+}
+
+# User Query to show favorite movie using a root type User
+
+query GetUserWFavoriteMovie($userId: ID!){
+  user(id: $userId) {
+    name
+    age
+    nationality
+    friends {
+      name
+      nationality
+    }
+    favoriteMovies {
+      name
+      yearOfPublication
+      isInTheaters
+    }
+  }
+}
+
+# Mutation Queries
+
+# Creates a new User
+
+mutation CreateUser($input: CreateUserInput!){
+  createUser(input: $input) {
+    id
+    name
+    age
+  }
+}
+
+# Update username
+
+mutation UpdateUser($input: UpdateUsernameInput!){
+  updateUsername(input: $input) {
+    id
+    username
   }
 }

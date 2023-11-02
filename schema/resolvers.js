@@ -50,6 +50,39 @@ const resolvers = {
       //   });
     },
   },
+
+  Mutation: {
+    createUser: (parent, args) => {
+      const user = args.input;
+      const lastId = UserList[UserList.length - 1].id;
+      user.id = lastId + 1;
+      UserList.push(user);
+      return user;
+    },
+
+    updateUsername: (parent, args) => {
+      const { id, newUsername } = args.input;
+      // console.log(id, newUsername);
+
+      let userUpdated;
+      UserList.forEach((user) => {
+        if (user.id === Number(id)) {
+          user.username = newUsername;
+          userUpdated = user;
+        }
+      });
+      return userUpdated;
+
+      // Alternative way
+      // const user = UserList.find((user) => user.id === Number(id));
+      // if (user) {
+      //   user.username = newUsername;
+      //   return user;
+      // } else {
+      //   throw new Error("User not found");
+      // }
+    },
+  },
 };
 
 module.exports = { resolvers };

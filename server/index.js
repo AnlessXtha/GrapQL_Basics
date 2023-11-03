@@ -5,8 +5,8 @@ const { resolvers } = require("./schema/resolvers");
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => {
-    return { name: "Anless" };
+  context: ({ req }) => {
+    return { req };
   },
 });
 /**

@@ -112,3 +112,11 @@ mutation UpdateUser($input: UpdateUsernameInput!){
     username
   }
 }
+
+
+# Fragments
+
+- They are used to impose limitation
+- They provide shortcut access to certain data fields to avoid the repition of code.
+  eg.
+    

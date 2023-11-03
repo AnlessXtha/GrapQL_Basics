@@ -15,6 +15,21 @@ input keyword
     nationality: Nationality!
   }
 
+
+user: (parent, args, context, info) => {
+      const id = args.id;
+      const user = _.find(UserList, { id: Number(id) });
+      return user;
+    },
+
+- parent: It provides access to the parent Query datatype
+  Eg. 
+    Query -> Users -> favoriteMovies
+- args: It give access to the inputs of the arguement
+- context: It allows objects to be accessible to every resolver function
+- info: 
+
+
 Queries:
 
 # User Queries

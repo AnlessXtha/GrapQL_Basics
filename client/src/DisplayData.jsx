@@ -47,6 +47,15 @@ const DELETE_USER_MUTATION = gql`
   }
 `;
 
+const UPDATE_USERNAME_MUTATION = gql`
+  mutation UpdateUsername($updateUsernameInput: UpdateUsernameInput!) {
+    updateUsername(input: $updateUsernameInput) {
+      id
+      username
+    }
+  }
+`;
+
 function DisplayData() {
   const [movieSearched, setMovieSearched] = useState("");
 
@@ -59,13 +68,38 @@ function DisplayData() {
   // Delete a user
   const [userId, setUserId] = useState();
 
+  // Update username
+  const [userIdUpdate, setUserIdUpdate] = useState();
+  const [newUsername, setNewUsername] = useState("");
+
+  // Fetching data of UserList and MoviesList using queries
   const { data, loading, refetch } = useQuery(QUERY_ALL_USERS);
   const { data: movieData } = useQuery(QUERY_ALL_MOVIES);
+
+  // Fetching data of a particular movie
   const [fetchMovie, { data: movieSearchData, error: movieSearchError }] =
     useLazyQuery(GET_MOVIE_BY_NAME);
 
+  // Mutating data of user
   const [createUser] = useMutation(CREATE_USER_MUTATION);
   const [deleteUser] = useMutation(DELETE_USER_MUTATION);
+  const [updateUsername] = useMutation(UPDATE_USERNAME_MUTATION);
+
+  const clearFieldsCreate = () => {
+    setName("");
+    setUsername("");
+    setAge("");
+    setNationality("");
+  };
+
+  const clearFieldsDelete = () => {
+    setUserId("");
+  };
+
+  const clearFieldsUpdate = () => {
+    setUserIdUpdate("");
+    setNewUsername("");
+  };
 
   if (loading) {
     return <h1>DATA IS LOADING...</h1>;
@@ -78,12 +112,13 @@ function DisplayData() {
   return (
     <div>
       {/* Create a user */}
-      <div>
+      <div style={{ border: "1px solid black", paddingBottom: "20px" }}>
         <h1>Create a User</h1>
         <hr />
         <input
           type="text"
           placeholder="Name..."
+          value={name}
           onChange={(event) => {
             setName(event.target.value);
           }}
@@ -91,6 +126,7 @@ function DisplayData() {
         <input
           type="text"
           placeholder="Username..."
+          value={username}
           onChange={(event) => {
             setUsername(event.target.value);
           }}
@@ -98,6 +134,7 @@ function DisplayData() {
         <input
           type="number"
           placeholder="Age..."
+          value={age}
           onChange={(event) => {
             setAge(event.target.value);
           }}
@@ -105,6 +142,7 @@ function DisplayData() {
         <input
           type="text"
           placeholder="Nationality..."
+          value={nationality}
           onChange={(event) => {
             setNationality(event.target.value.toUpperCase());
           }}
@@ -118,6 +156,8 @@ function DisplayData() {
             });
 
             refetch();
+
+            clearFieldsCreate();
           }}
         >
           Create User
@@ -125,12 +165,18 @@ function DisplayData() {
       </div>
 
       {/* Delete a user */}
-      <div>
+      <div
+        style={{
+          border: "1px solid black",
+          paddingBottom: "20px",
+          marginTop: "20px",
+        }}
+      >
         <h1>Delete a User</h1>
         <input
           type="text"
           placeholder="user id"
-          // value={userId}
+          value={userId}
           onChange={(event) => {
             setUserId(event.target.value);
           }}
@@ -142,11 +188,60 @@ function DisplayData() {
                 deleteUserId: Number(userId),
               },
             });
+
+            clearFieldsDelete();
+
             refetch();
-            console.log(userId);
           }}
         >
           Delete User
+        </button>
+      </div>
+
+      {/* Updating a username */}
+      <div
+        style={{
+          border: "1px solid black",
+          paddingBottom: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <h1>Update a Username</h1>
+        <div>
+          <p>User ID</p>
+          <input
+            type="text"
+            placeholder="user id"
+            value={userIdUpdate}
+            onChange={(event) => {
+              setUserIdUpdate(event.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <p>New Username</p>
+          <input
+            type="text"
+            placeholder="username"
+            value={newUsername}
+            onChange={(event) => {
+              setNewUsername(event.target.value);
+            }}
+          />
+        </div>
+
+        <button
+          onClick={() => {
+            updateUsername({
+              variables: {
+                updateUsernameInput: { id: Number(userIdUpdate), newUsername },
+              },
+            });
+            refetch();
+            clearFieldsUpdate();
+          }}
+        >
+          Update Username
         </button>
       </div>
 

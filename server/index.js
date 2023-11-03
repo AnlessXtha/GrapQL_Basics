@@ -2,7 +2,13 @@ const { ApolloServer } = require("apollo-server");
 const { typeDefs } = require("./schema/type-defs");
 const { resolvers } = require("./schema/resolvers");
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: () => {
+    return { name: "Anless" };
+  },
+});
 /**
 typeDefs
 - Everything, every piece of data every type that you define ,every query you define in graphql everything you do will exist inside of this typedefs variable

@@ -39,6 +39,14 @@ const CREATE_USER_MUTATION = gql`
   }
 `;
 
+const DELETE_USER_MUTATION = gql`
+  mutation DeleteUser($deleteUserId: ID!) {
+    deleteUser(id: $deleteUserId) {
+      id
+    }
+  }
+`;
+
 function DisplayData() {
   const [movieSearched, setMovieSearched] = useState("");
 
@@ -48,12 +56,16 @@ function DisplayData() {
   const [age, setAge] = useState("");
   const [nationality, setNationality] = useState("");
 
+  // Delete a user
+  const [userId, setUserId] = useState();
+
   const { data, loading, refetch } = useQuery(QUERY_ALL_USERS);
   const { data: movieData } = useQuery(QUERY_ALL_MOVIES);
   const [fetchMovie, { data: movieSearchData, error: movieSearchError }] =
     useLazyQuery(GET_MOVIE_BY_NAME);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION);
+  const [deleteUser] = useMutation(DELETE_USER_MUTATION);
 
   if (loading) {
     return <h1>DATA IS LOADING...</h1>;
@@ -65,7 +77,10 @@ function DisplayData() {
 
   return (
     <div>
+      {/* Create a user */}
       <div>
+        <h1>Create a User</h1>
+        <hr />
         <input
           type="text"
           placeholder="Name..."
@@ -108,10 +123,38 @@ function DisplayData() {
           Create User
         </button>
       </div>
+
+      {/* Delete a user */}
+      <div>
+        <h1>Delete a User</h1>
+        <input
+          type="text"
+          placeholder="user id"
+          // value={userId}
+          onChange={(event) => {
+            setUserId(event.target.value);
+          }}
+        />
+        <button
+          onClick={() => {
+            deleteUser({
+              variables: {
+                deleteUserId: Number(userId),
+              },
+            });
+            refetch();
+            console.log(userId);
+          }}
+        >
+          Delete User
+        </button>
+      </div>
+
       {data &&
         data.users.map((user) => {
           return (
             <div>
+              <h1>User ID: {user.id}</h1>
               <h1>Name: {user.name}</h1>
               <h1>Username: {user.username}</h1>
               <h1>Age: {user.age}</h1>
